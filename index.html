@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Martin Ardila — Vlog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:       #000000;
+      --bg2:      #000000;
+      --surface:  #111111;
+      --border:   #2a2a2a;
+      --accent:   #ffffff;
+      --text:     #ffffff;
+      --muted:    #888888;
+      --font:     'Space Grotesk', sans-serif;
+      --mono:     'Space Mono', monospace;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* orbs removed */
+    .orb { display: none; }
+
+    /* ── Layout ── */
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 18px 0;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: .85rem;
+      color: var(--text);
+      letter-spacing: .1em;
+    }
+    .nav-logo span { color: var(--muted); }
+    .nav-links {
+      display: flex; gap: 32px; list-style: none;
+    }
+    .nav-links a {
+      color: var(--muted); transition: color .15s;
+      text-transform: uppercase; font-size: .75rem; letter-spacing: .1em;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      font-family: var(--mono); font-size: .75rem; letter-spacing: .08em;
+      border: 1px solid var(--accent); color: var(--accent);
+      padding: 8px 18px;
+      transition: background .15s, color .15s;
+    }
+    .nav-cta:hover { background: var(--accent); color: #000; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding-top: 80px;
+    }
+    .hero-inner {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 6px 14px;
+      font-family: var(--mono); font-size: .7rem;
+      color: var(--muted); letter-spacing: .1em;
+      margin-bottom: 24px;
+    }
+    .hero-title {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -.02em;
+      margin-bottom: 12px;
+    }
+    .hero-title .accent { color: var(--text); }
+    .hero-title .accent2 { color: #ffffff; }
+    .hero-desc {
+      font-size: 1.05rem; color: var(--muted);
+      max-width: 480px; margin-bottom: 36px; line-height: 1.8;
+    }
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 26px;
+      font-size: .88rem; font-weight: 600; letter-spacing: .04em;
+      transition: opacity .15s; cursor: pointer; border: none;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+    }
+    .btn-primary:hover { opacity: .85; }
+    .btn-ghost {
+      background: transparent; color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { border-color: var(--text); }
+
+    /* hero visual */
+    .hero-visual {
+      position: relative; display: flex; justify-content: center; align-items: center;
+    }
+    .avatar-ring {
+      position: relative; width: 340px; height: 340px;
+    }
+    .avatar-ring::before, .avatar-ring::after { display: none; }
+    .avatar-img {
+      position: absolute; inset: 0; z-index: 2;
+      border-radius: 50%;
+      background: var(--surface);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      border: 2px solid var(--border);
+    }
+    .avatar-placeholder {
+      font-size: 5rem; user-select: none; opacity: .35;
+    }
+    .avatar-stats {
+      position: absolute; z-index: 10;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 10px 16px;
+      white-space: nowrap;
+    }
+    .stat-card .label { font-size: .65rem; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+    .stat-card .value { font-family: var(--mono); font-size: 1rem; color: var(--text); font-weight: 700; }
+    .stat-1 { bottom: 20px; left: -30px; }
+    .stat-2 { top: 30px; right: -30px; }
+
+    /* ── SECTION BASE ── */
+    section { padding: 100px 0; }
+    .section-label {
+      font-family: var(--mono); font-size: .72rem;
+      color: var(--muted); letter-spacing: .2em;
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 700; letter-spacing: -.02em;
+      line-height: 1.2; margin-bottom: 16px;
+    }
+    .section-desc { color: var(--muted); font-size: 1rem; max-width: 520px; line-height: 1.8; }
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0 0 80px;
+    }
+
+    /* ── WHAT I DO ── */
+    .cards-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1px; margin-top: 48px;
+      border: 1px solid var(--border);
+    }
+    .card {
+      background: var(--surface);
+      padding: 28px;
+      transition: background .15s;
+    }
+    .card::before { display: none; }
+    .card:hover { background: #1a1a1a; }
+    .card-icon {
+      width: 40px; height: 40px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; margin-bottom: 20px;
+    }
+    .card-title { font-size: 1rem; font-weight: 600; margin-bottom: 10px; }
+    .card-text { font-size: .88rem; color: var(--muted); line-height: 1.75; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+    .tag {
+      font-family: var(--mono); font-size: .65rem; letter-spacing: .08em;
+      padding: 3px 10px;
+      background: var(--bg); border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    /* ── WORKING ON ── */
+    .projects-list { margin-top: 48px; display: flex; flex-direction: column; gap: 1px; border: 1px solid var(--border); }
+    .project-item {
+      background: var(--surface);
+      padding: 28px 32px;
+      display: grid; grid-template-columns: auto 1fr auto;
+      gap: 24px; align-items: center;
+      transition: background .15s;
+    }
+    .project-item:hover { background: #1a1a1a; }
+    .project-num {
+      font-family: var(--mono); font-size: 1.6rem;
+      font-weight: 700; color: var(--border);
+      line-height: 1;
+    }
+    .project-content { flex: 1; }
+    .project-name { font-size: 1.05rem; font-weight: 600; margin-bottom: 6px; }
+    .project-desc { font-size: .88rem; color: var(--muted); line-height: 1.7; }
+    .project-meta { text-align: right; }
+    .project-status {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--mono); font-size: .68rem; letter-spacing: .1em;
+      padding: 4px 12px;
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .status-active { border-color: var(--accent); color: var(--accent); }
+    .status-active::before { display: none; }
+    .status-building { border-color: var(--border); color: var(--muted); }
+    .status-soon { border-color: var(--border); color: var(--muted); }
+
+    /* ── FUN PROJECTS ── */
+    .fun-grid {
+      display: flex; flex-direction: column;
+      gap: 1px; margin-top: 48px;
+      border: 1px solid var(--border);
+    }
+    .fun-card {
+      background: var(--surface);
+      overflow: hidden;
+      transition: background .15s;
+    }
+    .fun-card::before { display: none; }
+    .fun-card:hover { background: #1a1a1a; }
+    .fun-body { padding: 28px 28px 20px; }
+    .fun-emoji { font-size: 1.8rem; margin-bottom: 16px; }
+    .fun-name { font-size: 1rem; font-weight: 600; margin-bottom: 10px; }
+    .fun-desc { font-size: .88rem; color: var(--muted); line-height: 1.75; margin-bottom: 16px; }
+    .fun-media {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 12px; padding: 0 28px 28px;
+    }
+    .fun-media-box {
+      overflow: hidden;
+      aspect-ratio: 16/10;
+      border: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .fun-img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s; }
+    .fun-media-box:hover .fun-img { transform: scale(1.04); }
+    .fun-video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .fun-video-placeholder {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+      border: 1px dashed var(--border);
+      background: var(--bg);
+      color: var(--muted); font-size: .78rem;
+      font-family: var(--mono); letter-spacing: .05em;
+    }
+    .vp-icon {
+      width: 36px; height: 36px;
+      background: var(--surface); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .75rem; color: var(--muted);
+    }
+    @media (max-width: 768px) { .fun-media { grid-template-columns: 1fr; } }
+
+    /* ── FUTURE GOALS ── */
+    .future-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin-top: 48px;
+      border: 1px solid var(--border);
+    }
+    .future-item {
+      background: var(--surface);
+      padding: 28px;
+      display: flex; gap: 20px; align-items: flex-start;
+      transition: background .15s;
+    }
+    .future-item:hover { background: #1a1a1a; }
+    .future-item:nth-child(1) { grid-column: span 2; }
+    .future-icon { font-size: 1.6rem; flex-shrink: 0; margin-top: 2px; }
+    .future-text .title { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+    .future-text .desc { font-size: .88rem; color: var(--muted); line-height: 1.75; }
+    .future-horizon {
+      font-family: var(--mono); font-size: .65rem; color: var(--muted);
+      letter-spacing: .1em; margin-top: 10px; text-transform: uppercase;
+    }
+
+    /* ── TERMINAL BLOCK ── */
+    .terminal-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 32px;
+      margin: 60px 0;
+      font-family: var(--mono); font-size: .88rem;
+    }
+    .terminal-bar {
+      display: flex; gap: 6px; margin-bottom: 20px;
+    }
+    .terminal-dot { width: 10px; height: 10px; }
+    .t-red { background: #ff5f57; }
+    .t-yellow { background: #febc2e; }
+    .t-green { background: #28c840; }
+    .terminal-line { color: var(--muted); line-height: 2; }
+    .terminal-line .prompt { color: var(--accent); }
+    .terminal-line .cmd { color: var(--text); }
+    .terminal-line .out { color: var(--text); }
+    .terminal-line .comment { color: var(--muted); }
+    .cursor { display: none; }
+
+    /* ── CONTACT / FOOTER ── */
+    .contact-inner {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start;
+    }
+    .contact-links { display: flex; flex-direction: column; gap: 1px; margin-top: 28px; border: 1px solid var(--border); }
+    .contact-link {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 20px;
+      background: var(--surface);
+      transition: background .15s;
+      font-size: .9rem;
+    }
+    .contact-link:hover { background: #1a1a1a; }
+    .contact-link .icon { font-size: 1.1rem; width: 24px; text-align: center; }
+    .contact-link .link-label { font-weight: 500; flex: 1; }
+    .contact-link .link-arrow { color: var(--muted); }
+    .contact-link:hover .link-arrow { color: var(--text); }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      text-align: center;
+      font-family: var(--mono); font-size: .72rem;
+      color: var(--muted); letter-spacing: .08em;
+    }
+    footer span { color: var(--text); }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+      .hero-desc { max-width: 100%; }
+      .hero-actions { justify-content: center; }
+      .hero-visual { order: -1; }
+      .avatar-ring { width: 240px; height: 240px; }
+      .future-grid { grid-template-columns: 1fr; }
+      .future-item:nth-child(1) { grid-column: span 1; }
+      .project-item { grid-template-columns: auto 1fr; }
+      .project-meta { display: none; }
+      .contact-inner { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background layers -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="container nav-inner">
+      <div class="nav-logo">martin<span>.</span>ardila<span>()</span></div>
+      <ul class="nav-links">
+        <li><a href="#working-on">Projects</a></li>
+        <li><a href="#fun">For Fun</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <div class="hero-content">
+<h1 class="hero-title">
+            Hi, I'm <span class="accent">Martin</span><br/>
+            <span class="accent2">Ardila</span>
+          </h1>
+          <p class="hero-desc">
+            Futurist and high-tech enthusiast on a mission to make the world a better place. I believe science and engineering are the sharpest weapons against societal stagnation. Drawn to quantum computing, emerging technologies, and every breakthrough that will reshape our lifetime.
+          </p>
+          <div class="hero-actions">
+            <a href="#working-on" class="btn btn-primary">See what I've built ↓</a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="avatar-ring">
+            <div class="avatar-img">
+              <img src="martin.jpeg" alt="Martin Ardila" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORKING ON -->
+  <section id="working-on">
+    <div class="container">
+      <div class="divider"></div>
+      <div class="section-label">// 01 — Projects</div>
+      <h2 class="section-title">Projects & initiatives<br/>I've worked on</h2>
+      <p class="section-desc">A look at the things I've built and been part of.</p>
+
+      <div class="projects-list" id="projects-list">
+        <!-- Projects injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- FUN PROJECTS -->
+  <section id="fun">
+    <div class="container">
+      <div class="divider"></div>
+      <h2 class="section-title">For Fun</h2>
+      <div class="fun-grid" id="fun-projects-grid">
+        <!-- Fun projects injected by JS -->
+      </div>
+    </div>
+  </section>
+
+<!-- CONTACT -->
+  <section id="contact">
+    <div class="container">
+      <div class="divider"></div>
+      <div class="contact-inner">
+        <div>
+          <h2 class="section-title">Contact Me</h2>
+        </div>
+        <div>
+          <div class="contact-links" id="contact-links">
+            <!-- Links injected by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <script src="founder.js"></script>
+</body>
+</html>
